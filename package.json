@@ -1,0 +1,13 @@
+{
+  "name": "apex-stats-bot",
+  "version": "1.0.0",
+  "description": "Apex Stats Bot",
+  "main": "bot.js",
+  "author": "Seth Lee",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "dotenv": "^6.2.0",
+    "winston": "^3.2.1"
+  }
+}
