@@ -122,16 +122,15 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
         // !Cod
       case "cod":
-        try {
-          var codName = name.split("#");
-        } catch {
+        if (name.includes("#")) {} else {
           bot.sendMessage({
             to: channelID,
             message: "Please enter a valid Name after !cod (EX: !cod Sopagrande#1490)" +
               os.EOL + os.EOL + "**Current Sopa Bot Commands: !Cod + Battle.Net Name (SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**"
           });
-          break;
-        }
+          break
+        };
+        var codName = name.split("#");
         axios
           .get(
             `https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/battle/gamer/${codName[0]}%23${codName[1]}/profile/type/wz`, {
