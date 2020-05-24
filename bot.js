@@ -133,8 +133,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
           break
         };
         var codName = name.split("#");
-        if (codName[1] > "0") {
-
+        if (codName[1].toLowerCase() == "psn" || codName[1].toLowerCase() == "xbl") {
           axios
             .get(
               `https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/${codName[1]}/gamer/${codName[0]}/profile/type/wz`, {
