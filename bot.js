@@ -122,7 +122,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
         // !Cod
       case "cod":
-        if (name.includes("#")) {} else {
+        if (name) {
+          if (name.includes("#")) {}
+        } else {
           bot.sendMessage({
             to: channelID,
             message: "Please enter a valid Name after !cod (EX: !cod Sopagrande#1490)" +
