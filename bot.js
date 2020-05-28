@@ -26,12 +26,13 @@ bot.on("message", function (user, userID, channelID, message, evt) {
   // It will listen for messages that will start with `!`
   if (message.substring(0, 1) == "!") {
     var args = message.substring(1).split(" ");
-    var cmd = args[0];
+    var cmd = args[0].toLowerCase();
     var name = args[1];
 
     args = args.splice(1);
     switch (cmd) {
-      // !apex
+
+      // #region !Apex
       case "apex":
         axios
           .get(
@@ -87,8 +88,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
             });
           });
         break;
+        //#endregion !Apex
 
-        // !natalie
+        // #region !Natalie
       case "natalie":
         axios
           .get("https://api.thecatapi.com/v1/images/search", {
@@ -105,7 +107,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
           });
         break;
 
-        // Eddie
+        //#endregion !Natalie
+
+        // #region Eddie
       case "eddie":
         bot.sendMessage({
           to: channelID,
@@ -113,14 +117,19 @@ bot.on("message", function (user, userID, channelID, message, evt) {
             os.EOL + os.EOL + "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**"
         });
         break;
+
+        // #endregion Eddie
+
+        // #region !help
       case "help":
         bot.sendMessage({
           to: channelID,
           message: "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**"
         });
         break;
+        //#endregion !help
 
-        // !Cod
+        // #region !Cod
       case "cod":
         if (name) {
           if (name.includes("#")) {}
@@ -133,6 +142,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
           break
         };
         var codName = name.split("#");
+
+        //#region PSN/XBL
+
         if (codName[1].toLowerCase() == "psn" || codName[1].toLowerCase() == "xbl") {
           axios
             .get(
@@ -187,7 +199,12 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                   os.EOL + os.EOL + "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**"
               });
             });
-        } else {
+        }
+
+        //#endregion PSN/XBL
+
+        //#region Battle.Net
+        else {
           axios
             .get(
               `https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/battle/gamer/${codName[0]}%23${codName[1]}/profile/type/wz`, {
@@ -243,6 +260,10 @@ bot.on("message", function (user, userID, channelID, message, evt) {
             });
         }
         break;
+
+        // #endregion Battle.Net
+
+        // #endregion !Cod
     }
   }
 });
