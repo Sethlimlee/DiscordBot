@@ -200,22 +200,21 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 ).toFixed(2)}`;
 
                 var results = [];
-                results.push(`${codName[0]}'s Weekly Warzone Stats` + os.EOL);
-                results.push(matchesPlayed + os.EOL);
-                results.push(kills + os.EOL);
-                results.push(deaths + os.EOL);
-                results.push(kD + os.EOL);
-                results.push(gulagPercent + os.EOL);
-                results.push(averageDamageGivenPerGame + os.EOL);
-                results.push(averageDamageReceivedPerGame + os.EOL);
+                results.push(codName[0] + "'s Weekly Warzone Stats" + "\n");
+                results.push(matchesPlayed + "\n");
+                results.push(kills + "\n");
+                results.push(deaths + "\n");
+                results.push(kD + "\n");
+                results.push(gulagPercent + "\n");
+                results.push(averageDamageGivenPerGame + "\n");
+                results.push(averageDamageReceivedPerGame + "\n");
 
-                discordMessage = results.join(" " + os.EOL);
+                discordMessage = results.join(" ");
 
                 bot.sendMessage({
                   to: channelID,
                   message:
                     discordMessage +
-                    os.EOL +
                     os.EOL +
                     "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**",
                 });
@@ -275,22 +274,21 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 ).toFixed(2)}`;
 
                 var results = [];
-                results.push(`${codName[0]}'s Weekly Warzone Stats` + os.EOL);
-                results.push(matchesPlayed + os.EOL);
-                results.push(kills + os.EOL);
-                results.push(deaths + os.EOL);
-                results.push(kD + os.EOL);
-                results.push(gulagPercent + os.EOL);
-                results.push(averageDamageGivenPerGame + os.EOL);
-                results.push(averageDamageReceivedPerGame + os.EOL);
+                results.push(codName[0] + "'s Weekly Warzone Stats" + "\n");
+                results.push(matchesPlayed + "\n");
+                results.push(kills + "\n");
+                results.push(deaths + "\n");
+                results.push(kD + "\n");
+                results.push(gulagPercent + "\n");
+                results.push(averageDamageGivenPerGame + "\n");
+                results.push(averageDamageReceivedPerGame + "\n");
 
-                discordMessage = results.join(" " + os.EOL);
+                discordMessage = results.join(" ");
 
                 bot.sendMessage({
                   to: channelID,
                   message:
                     discordMessage +
-                    os.EOL +
                     os.EOL +
                     "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**",
                 });
