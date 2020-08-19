@@ -316,6 +316,51 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
       // #endregion Battle.Net
 
+      // region MPLLC Team KD
+
+      case "mpllc":
+        var arrayOfMembers = [
+          { sopagrande: 1490 },
+          { marinegef: 1861 },
+          { calingo93: "psn" },
+          { congo148: "psn" },
+        ];
+
+        var totalKills = 0;
+        var totalDeaths = 0;
+
+        for (member in arrayOfMembers) {
+          axios
+            .get(
+              `https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/battle/gamer/${member.key}%23${member.value}/profile/type/wz`,
+              {
+                headers: {
+                  cookie:
+                    process.env.cookie +
+                    " ACT_SSO_COOKIE=ODU1NDcxMzk3NDEwNDAzMjIzOjE1OTE0MTc3NTI4OTQ6MWM4MDgyMjA1N2FiZmM3NzdkODBhZDVkMDZlYzk4OWU; ACT_SSO_COOKIE_EXPIRY=1591417752894; umbrellaId=7518389490605933655; _scid=866d8b0f-7c22-4815-9c02-7410d0709801; _sctr=1|1590127200000; _fbp=fb.1.1590208177768.2123889994; mbox=session#e311e13ecbd341d1a8c53599209ca2c5#1590210755|PC#e311e13ecbd341d1a8c53599209ca2c5.34_0#1653453695; OptanonConsent=isIABGlobal=false&datestamp=Fri+May+22+2020+22%3A41%3A35+GMT-0600+(Mountain+Daylight+Time)&version=5.14.0&landingPath=NotLandingPage&groups=1%3A1%2C0_174752%3A1%2C0_174753%3A1%2C2%3A1%2C0_219555%3A1%2C0_174778%3A1%2C0_174774%3A1%2C0_174754%3A1%2C0_174792%3A1%2C0_174755%3A1%2C3%3A1%2C0_219550%3A1%2C0_174756%3A1%2C4%3A1%2C0_219557%3A1%2C0_174799%3A1%2C0_174757%3A1%2C0_174804%3A1%2C0_174758%3A1%2C0_219548%3A1%2C0_174759%3A1%2C0_174760%3A1%2C0_174761%3A1%2C0_174762%3A1%2C0_174763%3A1%2C0_219558%3A1%2C0_219560%3A1%2C0_174764%3A1%2C0_174765%3A1%2C0_219561%3A1%2C0_219563%3A1%2C0_174766%3A1%2C0_219564%3A1%2C0_174767%3A1%2C0_174768%3A1%2C0_219565%3A1%2C0_174769%3A1%2C0_174770%3A1%2C0_174771%3A1%2C0_174772%3A1%2C0_174773%3A1%2C0_174775%3A1%2C0_174776%3A1%2C0_174777%3A1%2C0_174779%3A1%2C0_174780%3A1%2C0_174781%3A1%2C0_174782%3A1%2C0_174783%3A1%2C0_174784%3A1%2C0_174785%3A1%2C0_174786%3A1%2C0_174787%3A1%2C0_174788%3A1%2C0_174789%3A1%2C0_174790%3A1%2C0_174791%3A1%2C0_174793%3A1%2C0_174794%3A1%2C0_174795%3A1%2C0_174796%3A1%2C0_174797%3A1%2C0_174798%3A1%2C0_174800%3A1%2C0_174801%3A1%2C0_174802%3A1%2C0_174803%3A1%2C0_216175%3A1%2C0_218306%3A1%2C0_218307%3A1%2C0_218308%3A1%2C0_218309%3A1%2C0_219559%3A1%2C0_219547%3A1%2C0_219551%3A1&AwaitingReconsent=false; AMCV_0FB367C2524450B90A490D4C%40AdobeOrg=1075005958%7CMCIDTS%7C18406%7CMCMID%7C73123617618820907210009175893058466195%7CMCAAMLH-1590815216%7C7%7CMCAAMB-1590815216%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1590217616s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C4.4.1%7CMCCIDH%7C1928159107; s_nr=1590210417508-New; API_CSRF_TOKEN=b72e1f87-4596-4c69-b92d-4a4f40eae5f2",
+                },
+              }
+            )
+            .then((response) => {
+              var stats = response.data.data.weekly.mode.br_all.properties;
+              totalKills += stats.kills;
+              totalDeaths += stats.deaths;
+            });
+        }
+
+        bot.sendMessage({
+          to: channelID,
+          message:
+            totalKills +
+            os.EOL +
+            totalDeaths +
+            os.EOL +
+            "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**",
+        });
+        break;
+
+      // endregion MPLLC Team KD
+
       // #endregion !Cod
     }
   }
