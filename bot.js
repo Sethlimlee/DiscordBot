@@ -357,7 +357,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                   bot.sendMessage({
                     to: channelID,
                     message:
-                      "------**MPLLC STATS**------" +
+                      "------**MPLLC WEEKLY STATS**------" +
                       os.EOL +
                       os.EOL +
                       "Total Kills: " +
