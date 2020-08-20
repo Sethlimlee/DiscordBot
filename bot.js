@@ -138,7 +138,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         bot.sendMessage({
           to: channelID,
           message:
-            "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie**",
+            "**Current Sopa Bot Commands: !Cod + Name#platform OR Name#battle.net ID (Calingo93#psn warrenjeffzz#xbl or SopaGrande#1490), !Apex + Origin Username, !Natalie, !Eddie, !MPLLC**",
         });
         break;
       //#endregion !Help
@@ -310,7 +310,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
       // #endregion Battle.Net
 
-      // region MPLLC Team KD
+      // #region MPLLC Team KD
 
       case "mpllc":
         var array = [
@@ -380,7 +380,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         }
         break;
 
-      // endregion MPLLC Team KD
+      // #endregion MPLLC Team KD
 
       // #endregion !Cod
     }
