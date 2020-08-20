@@ -359,7 +359,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                     message:
                       "------**MPLLC WEEKLY STATS**------" +
                       os.EOL +
-                      "---(Sopa, MarineGEF, Calingo, Congo)---" +
+                      "(Sopa, MarineGEF, Calingo, Congo)" +
                       os.EOL +
                       os.EOL +
                       "Total Kills: " +
