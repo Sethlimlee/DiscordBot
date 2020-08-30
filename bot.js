@@ -400,6 +400,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
           "battle/gamer/J4ngoF3tt%231506/profile/type/wz",
           "xbl/gamer/warrenjeffzz/profile/type/wz",
           "psn/gamer/G-Son93/profile/type/wz",
+          "battle/gamer/THEBROWNBUDA%231230/profile/type/wz",
         ];
 
         var nameArray = [
@@ -412,8 +413,8 @@ bot.on("message", function (user, userID, channelID, message, evt) {
           "DarkPaNdA05",
           "J4ngoF3tt",
           "warrenjeffzz",
-          "Natabee",
           "G-Son93",
+          "THEBROWNBUDA",
         ];
         var count = 0;
         var displayArray = ["------**Weekly Warzone KDs**------"];
