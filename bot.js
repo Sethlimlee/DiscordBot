@@ -325,6 +325,11 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         var totalKills = 0;
         var totalDeaths = 0;
         var count = 0;
+        var totalMatches = 0;
+        var totalDamage = 0;
+        var totalDamageTaken = 0;
+        var avgDamage = 0;
+        var avgDamageTaken = 0;
 
         MPLLC(array);
 
@@ -348,16 +353,30 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 var stats = response.data.data.weekly.mode.br_all.properties;
                 console.log(arrayOfMembers[i] + " kills: " + stats.kills);
                 console.log(arrayOfMembers[i] + " deaths: " + stats.deaths);
+                console.log(`Matches Played: ${stats.matchesPlayed}`);
+                console.log(`Damage: ${stats.damageDone}`);
+                console.log(`Damage Taken: ${stats.damageTaken}`);
 
+                totalMatches += stats.matchesPlayed;
                 totalKills += stats.kills;
                 totalDeaths += stats.deaths;
+                totalDamage += stats.damageDone;
+                totalDamageTaken += stats.damageTaken;
+
                 console.log("Total Kills: " + totalKills);
                 console.log("Total Deaths: " + totalDeaths);
+                console.log("Total Matches: " + totalMatches);
+                console.log("Total Damage: " + totalDamage);
+                console.log("Total Damage Taken: " + totalDamageTaken);
+
                 count++;
                 console.log("members gone through " + count);
 
                 if (count === 4) {
                   var teamKD = (totalKills / totalDeaths).toFixed(2);
+                  avgDamage = (totalDamage / totalMatches).toFixed(2);
+                  avgDamageTaken = (totalDamageTaken / totalMatches).toFixed(2);
+
                   bot.sendMessage({
                     to: channelID,
                     message:
@@ -374,6 +393,14 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                       os.EOL +
                       "KD: " +
                       teamKD +
+                      os.EOL +
+                      os.EOL +
+                      "Average Damage Per Match: " +
+                      avgDamage +
+                      os.EOL +
+                      os.EOL +
+                      "Average Damage Taken Per Match: " +
+                      avgDamageTaken +
                       os.EOL +
                       os.EOL +
                       "!help",
