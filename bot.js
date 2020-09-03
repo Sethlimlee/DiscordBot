@@ -1,12 +1,22 @@
+require("dotenv").config();
 var Discord = require("discord.io");
 var logger = require("winston");
+const express = require("express");
 var axios = require("axios");
 var os = require("os");
-var chartjs = require("chart.js");
-const { waitForDebugger } = require("inspector");
-const { time } = require("console");
+var fs = require("fs");
+const chalk = require("chalk");
+const massive = require("massive");
+const { CONNECTION_STRING } = process.env;
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
-require("dotenv").config();
+const app = express();
+
+massive(CONNECTION_STRING).then((db) => {
+  console.log(chalk.magenta("The Database has Connected!"));
+  app.set("db", db);
+});
+
 // #region botConfig
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -505,100 +515,89 @@ bot.on("message", function (user, userID, channelID, message, evt) {
       // #region !Test
       case "test":
         // #region chart
-        const { CanvasRenderService } = require("chartjs-node-canvas");
+        user = "";
+        var dates = [];
+        var kds = [];
+        const db = app.get("db");
+        db.get_user(["seth"]).then((dbUser) => {
+          user = dbUser[0];
+          console.log(user.kd.length);
+          for (i = 0; i < user.kd.length; i++) {
+            dates.push(user.kd[i][0]);
+            kds.push(parseFloat(user.kd[i][1]));
+          }
+          console.log(dates);
+          console.log(kds);
 
-        const width = 400;
-        const height = 400;
-        const chartCallback = (ChartJS) => {
-          // Global config example: https://www.chartjs.org/docs/latest/configuration/
-          ChartJS.defaults.global.elements.rectangle.borderWidth = 2;
-          // Global plugin example: https://www.chartjs.org/docs/latest/developers/plugins.html
-          ChartJS.plugins.register({
-            // plugin implementation
-          });
-          // New chart type example: https://www.chartjs.org/docs/latest/developers/charts.html
-          ChartJS.controllers.MyType = ChartJS.DatasetController.extend({
-            // chart implementation
-          });
-        };
-        const canvasRenderService = new CanvasRenderService(
-          width,
-          height,
-          chartCallback
-        );
+          const { CanvasRenderService } = require("chartjs-node-canvas");
 
-        (async () => {
-          const configuration = {
-            type: "bar",
-            data: {
-              labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-              datasets: [
-                {
-                  label: "# of Votes",
-                  data: [12, 19, 3, 5, 2, 3],
-                  backgroundColor: [
-                    "rgba(255, 99, 132, 0.2)",
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba(255, 206, 86, 0.2)",
-                    "rgba(75, 192, 192, 0.2)",
-                    "rgba(153, 102, 255, 0.2)",
-                    "rgba(255, 159, 64, 0.2)",
-                  ],
-                  borderColor: [
-                    "rgba(255,99,132,1)",
-                    "rgba(54, 162, 235, 1)",
-                    "rgba(255, 206, 86, 1)",
-                    "rgba(75, 192, 192, 1)",
-                    "rgba(153, 102, 255, 1)",
-                    "rgba(255, 159, 64, 1)",
-                  ],
-                  borderWidth: 1,
-                },
-              ],
-            },
-            options: {
-              scales: {
-                yAxes: [
+          const width = 400;
+          const height = 400;
+          const chartCallback = (ChartJS) => {
+            ChartJS.plugins.register({
+              beforeDraw: function (chartInstance) {
+                var ctx = chartInstance.chart.ctx;
+                ctx.fillStyle = "white";
+                ctx.fillRect(
+                  0,
+                  0,
+                  chartInstance.chart.width,
+                  chartInstance.chart.height
+                );
+              },
+            });
+          };
+          const canvasRenderService = new CanvasRenderService(
+            width,
+            height,
+            chartCallback
+          );
+
+          (async () => {
+            const configuration = {
+              fill: true,
+              backgroundColor: "white",
+              type: "line",
+              data: {
+                labels: dates,
+                datasets: [
                   {
-                    ticks: {
-                      beginAtZero: true,
-                      callback: (value) => "$" + value,
-                    },
+                    data: kds,
+                    label: "SopaGrande",
+                    borderColor: "#3e95cd",
+                    fill: false,
                   },
                 ],
               },
-            },
-          };
+              options: {
+                title: {
+                  display: true,
+                  text: "KD",
+                },
 
-          const image = await canvasRenderService.renderToBuffer(
-            configuration,
-            "image/jpeg"
-          );
-          const dataUrl = await canvasRenderService.renderToDataURL(
-            configuration,
-            "image/png"
-          );
-          var fs = require("fs");
-          var data = dataUrl.replace(/^data:image\/\w+;base64,/, "");
-          var buf = Buffer.from(data, "base64");
-          fs.writeFile("image7.png", buf, function (err) {
-            if (err) throw err;
-          });
+                backgroundColor: "rgba(251, 85, 85, 0.4)",
+              },
+            };
 
-          var base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
-          require("fs").writeFile("out.png", base64Data, "base64", function (
-            err
-          ) {});
-          console.log(image);
-          // console.log(stream);
-          setTimeout(() => {
-            bot.uploadFile({
-              to: channelID,
-              file: "image7.png",
+            const dataUrl = await canvasRenderService.renderToDataURL(
+              configuration,
+              "image/png"
+            );
+            var data = dataUrl.replace(/^data:image\/\w+;base64,/, "");
+            var buf = Buffer.from(data, "base64");
+            fs.writeFile("image7.png", buf, function (err) {
+              if (err) throw err;
             });
-          }, 1000);
-        })();
-        // #endregion chart
+
+            setTimeout(() => {
+              bot.uploadFile({
+                to: channelID,
+                file: "image7.png",
+              });
+            }, 1000);
+          })();
+          // #endregion chart
+        });
         break;
       //#endregion !Test
     }
