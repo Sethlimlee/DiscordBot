@@ -2,8 +2,12 @@ var Discord = require("discord.io");
 var logger = require("winston");
 var axios = require("axios");
 var os = require("os");
-require("dotenv").config();
+var chartjs = require("chart.js");
+const { waitForDebugger } = require("inspector");
+const { time } = require("console");
 
+require("dotenv").config();
+// #region botConfig
 // Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(new logger.transports.Console(), {
@@ -30,6 +34,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
     var name = args[1];
 
     args = args.splice(1);
+
+    // #endregion botConfig
+
     switch (cmd) {
       // #region !Apex
       case "apex":
@@ -494,6 +501,106 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         }
 
       // #endregion WZKD
+
+      // #region !Test
+      case "test":
+        // #region chart
+        const { CanvasRenderService } = require("chartjs-node-canvas");
+
+        const width = 400;
+        const height = 400;
+        const chartCallback = (ChartJS) => {
+          // Global config example: https://www.chartjs.org/docs/latest/configuration/
+          ChartJS.defaults.global.elements.rectangle.borderWidth = 2;
+          // Global plugin example: https://www.chartjs.org/docs/latest/developers/plugins.html
+          ChartJS.plugins.register({
+            // plugin implementation
+          });
+          // New chart type example: https://www.chartjs.org/docs/latest/developers/charts.html
+          ChartJS.controllers.MyType = ChartJS.DatasetController.extend({
+            // chart implementation
+          });
+        };
+        const canvasRenderService = new CanvasRenderService(
+          width,
+          height,
+          chartCallback
+        );
+
+        (async () => {
+          const configuration = {
+            type: "bar",
+            data: {
+              labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+              datasets: [
+                {
+                  label: "# of Votes",
+                  data: [12, 19, 3, 5, 2, 3],
+                  backgroundColor: [
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(255, 159, 64, 0.2)",
+                  ],
+                  borderColor: [
+                    "rgba(255,99,132,1)",
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(255, 159, 64, 1)",
+                  ],
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true,
+                      callback: (value) => "$" + value,
+                    },
+                  },
+                ],
+              },
+            },
+          };
+
+          const image = await canvasRenderService.renderToBuffer(
+            configuration,
+            "image/jpeg"
+          );
+          const dataUrl = await canvasRenderService.renderToDataURL(
+            configuration,
+            "image/png"
+          );
+          var fs = require("fs");
+          var data = dataUrl.replace(/^data:image\/\w+;base64,/, "");
+          var buf = Buffer.from(data, "base64");
+          fs.writeFile("image7.png", buf, function (err) {
+            if (err) throw err;
+          });
+
+          var base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
+          require("fs").writeFile("out.png", base64Data, "base64", function (
+            err
+          ) {});
+          console.log(image);
+          // console.log(stream);
+          setTimeout(() => {
+            bot.uploadFile({
+              to: channelID,
+              file: "image7.png",
+            });
+          }, 1000);
+        })();
+        // #endregion chart
+        break;
+      //#endregion !Test
     }
   }
 });

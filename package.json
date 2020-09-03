@@ -6,6 +6,11 @@
   "author": "Seth Lee",
   "dependencies": {
     "axios": "^0.18.1",
+    "canvas": "^2.6.1",
+    "chart.js": "^2.9.3",
+    "chartjs": "^0.3.24",
+    "chartjs-node": "^1.7.1",
+    "chartjs-node-canvas": "^3.0.6",
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "dotenv": "^6.2.0",
     "winston": "^3.2.1"
