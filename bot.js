@@ -9,6 +9,7 @@ const chalk = require("chalk");
 const massive = require("massive");
 const { CONNECTION_STRING } = process.env;
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+process.env.FONTCONFIG_PATH='./fonts'
 
 const app = express();
 
