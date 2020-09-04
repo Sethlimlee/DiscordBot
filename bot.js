@@ -299,10 +299,12 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
                 discordMessage = results.join(" ");
 
-                bot.sendMessage({
-                  to: channelID,
-                  message: discordMessage + os.EOL + os.EOL + "!help",
-                });
+                // bot.sendMessage({
+                //   to: channelID,
+                //   message: discordMessage + os.EOL + os.EOL + "!help",
+                // });
+
+                makeChart(codName, kD);
               } else {
                 bot.sendMessage({
                   to: channelID,
@@ -311,6 +313,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
               }
             })
             .catch(function (error) {
+              console.log(error);
               bot.sendMessage({
                 to: channelID,
                 message:
@@ -514,18 +517,30 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
       // #region !Test
       case "test":
+        var codName = name.split("#")[0];
+        var d = new Date();
+        console.log(codName);
+        var month = (d.getMonth() + 1).toString();
+        var day = d.getDate().toString();
+        var date = month + "/" + day;
+        var testKD = 1.66;
+
         // #region chart
         user = "";
         var dates = [];
         var kds = [];
+
         const db = app.get("db");
         db.get_user(["seth"]).then((dbUser) => {
           user = dbUser[0];
-          console.log(user.kd.length);
           for (i = 0; i < user.kd.length; i++) {
             dates.push(user.kd[i][0]);
             kds.push(parseFloat(user.kd[i][1]));
           }
+
+          dates.push(date);
+          kds.push(testKD);
+
           console.log(dates);
           console.log(kds);
 
@@ -602,4 +617,131 @@ bot.on("message", function (user, userID, channelID, message, evt) {
       //#endregion !Test
     }
   }
+
+  async function makeChart(codNameUpper, kd) {
+    try {
+      var codName = codNameUpper[0].toLowerCase();
+      kd = parseFloat(kd.split(" ")[1]);
+      var d = new Date();
+      console.log(codName);
+      var month = (d.getMonth() + 1).toString();
+      var day = d.getDate().toString();
+      var date = month + "/" + day;
+
+      // #region chart
+      user = "";
+      var dates = [];
+      var kds = [];
+      const db = app.get("db");
+      try {
+        await createUserDB(codName);
+      } catch {}
+      db.get_user([codName]).then((dbUser) => {
+        console.log(dbUser);
+        user = dbUser[0];
+        if (user.kd === null) {
+          user.kd = [];
+        } else {
+          for (i = 0; i < user.kd.length; i++) {
+            dates.push(user.kd[i][0]);
+            kds.push(parseFloat(user.kd[i][1]));
+          }
+        }
+        dates.push(date);
+        kds.push(kd);
+
+        console.log(dates);
+        console.log(kds);
+
+        const { CanvasRenderService } = require("chartjs-node-canvas");
+
+        const width = 400;
+        const height = 400;
+        const chartCallback = (ChartJS) => {
+          ChartJS.plugins.register({
+            beforeDraw: function (chartInstance) {
+              var ctx = chartInstance.chart.ctx;
+              ctx.fillStyle = "white";
+              ctx.fillRect(
+                0,
+                0,
+                chartInstance.chart.width,
+                chartInstance.chart.height
+              );
+            },
+          });
+        };
+        const canvasRenderService = new CanvasRenderService(
+          width,
+          height,
+          chartCallback
+        );
+
+        (async () => {
+          const configuration = {
+            type: "line",
+            data: {
+              labels: dates,
+              datasets: [
+                {
+                  data: kds,
+                  label: codNameUpper[0],
+                  borderColor: "#3e95cd",
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              title: {
+                display: true,
+                text: "KD",
+              },
+
+              backgroundColor: "rgba(251, 85, 85, 0.4)",
+            },
+          };
+
+          const dataUrl = await canvasRenderService.renderToDataURL(
+            configuration,
+            "image/png"
+          );
+          var data = dataUrl.replace(/^data:image\/\w+;base64,/, "");
+          var buf = Buffer.from(data, "base64");
+          fs.writeFile("image7.png", buf, function (err) {
+            if (err) throw err;
+          });
+
+          setTimeout(() => {
+            bot.uploadFile({
+              to: channelID,
+              file: "image7.png",
+            });
+          }, 1000);
+          user.kd.push([date, kd.toString()]);
+          console.log("updating db with " + user.kd);
+          console.log(user.kd);
+          updateDB(codName, user.kd);
+        })();
+
+        // #endregion chart
+      });
+    } catch {
+      console.log("chart catch");
+    }
+  }
 });
+
+function updateDB(name, array) {
+  const db = app.get("db");
+  db.update_or_insert_user([name, array]).then((response) => {
+    console.log(response);
+  });
+}
+
+async function createUserDB(name) {
+  console.log(name);
+  const db = app.get("db");
+  console.log(name);
+  await db.create_user([name]);
+  console.log("created");
+}
