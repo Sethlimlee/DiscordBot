@@ -9,7 +9,7 @@ const chalk = require("chalk");
 const massive = require("massive");
 const { CONNECTION_STRING } = process.env;
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-process.env.FONTCONFIG_PATH='./fonts'
+process.env.FONTCONFIG_PATH = "./fonts";
 
 const app = express();
 
@@ -659,6 +659,8 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         const width = 400;
         const height = 400;
         const chartCallback = (ChartJS) => {
+          ChartJS.defaults.global.defaultFontFamily = "Montserrat";
+
           ChartJS.plugins.register({
             beforeDraw: function (chartInstance) {
               var ctx = chartInstance.chart.ctx;
