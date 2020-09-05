@@ -233,6 +233,8 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                   to: channelID,
                   message: discordMessage + os.EOL + os.EOL + "!help",
                 });
+
+                makeChart(codName, kD);
               } else {
                 bot.sendMessage({
                   to: channelID,
