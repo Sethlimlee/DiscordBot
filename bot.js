@@ -660,7 +660,6 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         const height = 400;
         const chartCallback = (ChartJS) => {
           ChartJS.defaults.global.defaultFontFamily = "Montserrat";
-
           ChartJS.plugins.register({
             beforeDraw: function (chartInstance) {
               var ctx = chartInstance.chart.ctx;
@@ -674,12 +673,15 @@ bot.on("message", function (user, userID, channelID, message, evt) {
             },
           });
         };
+
         const canvasRenderService = new CanvasRenderService(
           width,
           height,
           chartCallback
         );
-
+        canvasRenderService.registerFont("./fonts/Montserrat-Black.otf", {
+          family: "Montserrat",
+        });
         (async () => {
           const configuration = {
             type: "line",
