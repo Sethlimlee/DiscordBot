@@ -300,10 +300,10 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
                 discordMessage = results.join(" ");
 
-                // bot.sendMessage({
-                //   to: channelID,
-                //   message: discordMessage + os.EOL + os.EOL + "!help",
-                // });
+                bot.sendMessage({
+                  to: channelID,
+                  message: discordMessage + os.EOL + os.EOL + "!help",
+                });
 
                 makeChart(codName, kD);
               } else {
@@ -699,7 +699,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
             options: {
               title: {
                 display: true,
-                text: "KD",
+                text: "KD Progression",
               },
 
               backgroundColor: "rgba(251, 85, 85, 0.4)",
