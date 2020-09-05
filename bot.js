@@ -714,14 +714,14 @@ bot.on("message", function (user, userID, channelID, message, evt) {
           );
           var data = dataUrl.replace(/^data:image\/\w+;base64,/, "");
           var buf = Buffer.from(data, "base64");
-          fs.writeFile("image7.png", buf, function (err) {
+          fs.writeFile("./images/image.png", buf, function (err) {
             if (err) throw err;
           });
 
           setTimeout(() => {
             bot.uploadFile({
               to: channelID,
-              file: "image7.png",
+              file: "./images/image.png",
             });
           }, 1000);
           user.kd.push([date, kd.toString()]);
