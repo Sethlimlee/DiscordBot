@@ -274,7 +274,6 @@ bot.on("message", function (user, userID, channelID, message, evt) {
             .then((response) => {
               if (response) {
                 var stats = response.data.data.weekly.mode.br_all.properties;
-
                 var matchesPlayed = `Matches Played: ${stats.matchesPlayed}`;
                 var kills = `Kills: ${stats.kills}`;
                 var deaths = `Deaths: ${stats.deaths}`;
@@ -289,6 +288,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 var averageDamageReceivedPerGame = `Average Damage Taken Per Game: ${(
                   stats.damageTaken / stats.matchesPlayed
                 ).toFixed(2)}`;
+                var killsPerGame = `Kills Per Game: ${stats.killsPerGame.toFixed(
+                  2
+                )}`;
 
                 var results = [];
                 results.push(codName[0] + "'s Weekly Warzone Stats" + "\n");
@@ -299,6 +301,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 results.push(gulagPercent + "\n");
                 results.push(averageDamageGivenPerGame + "\n");
                 results.push(averageDamageReceivedPerGame + "\n");
+                results.push(killsPerGame + "\n");
 
                 discordMessage = results.join(" ");
 
@@ -515,109 +518,8 @@ bot.on("message", function (user, userID, channelID, message, evt) {
               });
           }
         }
-
-      // #endregion WZKD
-
-      // #region !Test
-      case "test":
-        var codName = name.split("#")[0];
-        var d = new Date();
-        console.log(codName);
-        var month = (d.getMonth() + 1).toString();
-        var day = d.getDate().toString();
-        var date = month + "/" + day;
-        var testKD = 1.66;
-
-        // #region chart
-        user = "";
-        var dates = [];
-        var kds = [];
-
-        const db = app.get("db");
-        db.get_user(["seth"]).then((dbUser) => {
-          user = dbUser[0];
-          for (i = 0; i < user.kd.length; i++) {
-            dates.push(user.kd[i][0]);
-            kds.push(parseFloat(user.kd[i][1]));
-          }
-
-          dates.push(date);
-          kds.push(testKD);
-
-          console.log(dates);
-          console.log(kds);
-
-          const { CanvasRenderService } = require("chartjs-node-canvas");
-
-          const width = 400;
-          const height = 400;
-          const chartCallback = (ChartJS) => {
-            ChartJS.plugins.register({
-              beforeDraw: function (chartInstance) {
-                var ctx = chartInstance.chart.ctx;
-                ctx.fillStyle = "white";
-                ctx.fillRect(
-                  0,
-                  0,
-                  chartInstance.chart.width,
-                  chartInstance.chart.height
-                );
-              },
-            });
-          };
-          const canvasRenderService = new CanvasRenderService(
-            width,
-            height,
-            chartCallback
-          );
-
-          (async () => {
-            const configuration = {
-              fill: true,
-              backgroundColor: "white",
-              type: "line",
-              data: {
-                labels: dates,
-                datasets: [
-                  {
-                    data: kds,
-                    label: "SopaGrande",
-                    borderColor: "#3e95cd",
-                    fill: false,
-                  },
-                ],
-              },
-              options: {
-                title: {
-                  display: true,
-                  text: "KD",
-                },
-
-                backgroundColor: "rgba(251, 85, 85, 0.4)",
-              },
-            };
-
-            const dataUrl = await canvasRenderService.renderToDataURL(
-              configuration,
-              "image/png"
-            );
-            var data = dataUrl.replace(/^data:image\/\w+;base64,/, "");
-            var buf = Buffer.from(data, "base64");
-            fs.writeFile("image7.png", buf, function (err) {
-              if (err) throw err;
-            });
-
-            setTimeout(() => {
-              bot.uploadFile({
-                to: channelID,
-                file: "image7.png",
-              });
-            }, 1000);
-          })();
-          // #endregion chart
-        });
         break;
-      //#endregion !Test
+      // #endregion WZKD
     }
   }
 
