@@ -605,6 +605,14 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 display: true,
                 text: "KD Progression",
               },
+              elements: {
+                line: {
+                  tension: 0,
+                },
+                point: {
+                  radius: 0,
+                },
+              },
 
               backgroundColor: "rgba(251, 85, 85, 0.4)",
             },
