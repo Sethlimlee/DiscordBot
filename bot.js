@@ -48,6 +48,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
     // #endregion botConfig
 
+    //#region Games
     switch (cmd) {
       // #region !Apex
       case "apex":
@@ -216,6 +217,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 var averageDamageReceivedPerGame = `Average Damage Taken Per Game: ${(
                   stats.damageTaken / stats.matchesPlayed
                 ).toFixed(2)}`;
+                var killsPerGame = `Kills Per Game: ${stats.killsPerGame.toFixed(
+                  2
+                )}`;
 
                 var results = [];
                 results.push(codName[0] + "'s Weekly Warzone Stats" + "\n");
@@ -226,6 +230,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 results.push(gulagPercent + "\n");
                 results.push(averageDamageGivenPerGame + "\n");
                 results.push(averageDamageReceivedPerGame + "\n");
+                results.push(killsPerGame + "\n");
 
                 discordMessage = results.join(" ");
 
@@ -522,6 +527,9 @@ bot.on("message", function (user, userID, channelID, message, evt) {
       // #endregion WZKD
     }
   }
+  //#endregion Games
+
+  //#region ChartCreation
 
   async function makeChart(codNameUpper, kd) {
     try {
@@ -648,6 +656,10 @@ bot.on("message", function (user, userID, channelID, message, evt) {
   }
 });
 
+//#endregion ChartCreation
+
+//#region DB Functions
+
 function updateDB(name, array) {
   const db = app.get("db");
   db.update_or_insert_user([name, array]).then((response) => {
@@ -662,3 +674,5 @@ async function createUserDB(name) {
   await db.create_user([name]);
   console.log("created");
 }
+
+//#endregion DB Functions
