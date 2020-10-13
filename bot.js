@@ -13,6 +13,7 @@ process.env.FONTCONFIG_PATH = "./fonts";
 
 const app = express();
 
+// Connect to DB
 massive(CONNECTION_STRING).then((db) => {
   console.log(chalk.magenta("The Database has Connected!"));
   app.set("db", db);
@@ -48,7 +49,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
     // #endregion botConfig
 
-    //#region Games
+  //#region Games
     switch (cmd) {
       // #region !Apex
       case "apex":
@@ -571,6 +572,8 @@ bot.on("message", function (user, userID, channelID, message, evt) {
         const width = 400;
         const height = 400;
         const chartCallback = (ChartJS) => {
+
+          // Font Required (in font folder)
           ChartJS.defaults.global.defaultFontFamily = "Montserrat";
           ChartJS.plugins.register({
             beforeDraw: function (chartInstance) {
@@ -613,6 +616,8 @@ bot.on("message", function (user, userID, channelID, message, evt) {
                 display: true,
                 text: "KD Progression",
               },
+
+              // to make line not curvy and disable points
               elements: {
                 line: {
                   tension: 0,
@@ -658,7 +663,7 @@ bot.on("message", function (user, userID, channelID, message, evt) {
 
 //#endregion ChartCreation
 
-//#region DB Functions
+  //#region DB Functions
 
 function updateDB(name, array) {
   const db = app.get("db");
@@ -675,4 +680,4 @@ async function createUserDB(name) {
   console.log("created");
 }
 
-//#endregion DB Functions
+  //#endregion DB Functions
