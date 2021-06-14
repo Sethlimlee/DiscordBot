@@ -38,6 +38,11 @@ bot.on("ready", function (evt) {
   logger.info(bot.username + " - (" + bot.id + ")");
 });
 
+bot.on('disconnect', function(msg, code) {
+  if (code === 0) return console.error(msg);
+  bot.connect();
+});
+
 // bot.on('message', function(user, userID, channelID, message, event) {
 //   if (message === "ping") {
 //       bot.sendMessage({
